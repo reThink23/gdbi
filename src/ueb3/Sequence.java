@@ -1,0 +1,74 @@
+package ueb3;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public abstract class Sequence {
+    protected String sequence;
+    protected int length;
+
+    protected static boolean testLetters(String pattern, String sequence) {
+        Pattern pat = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+        Matcher m = pat.matcher(sequence);
+        return m.find();
+    }
+
+    protected static Sequence createSeqObject(String sequence) throws InvalidSequenceException {
+        // Invarianten
+        if (testLetters("[ATCG\\\\-]+", sequence)) return new DNASequence(sequence);
+        else if (testLetters("[AUCG\\\\-]+", sequence)) return new RNASequence(sequence);
+        else if (testLetters("[ACDEFGHIKLMNPQRSTVWYZXBU\\\\-\\\\*]+", sequence)) return new ProteinSequence(sequence);
+        else throw new InvalidSequenceException("Given Sequence is not an DNA, RNA or Protein sequence");
+    }
+
+    public static ArrayList<Sequence> readFastA(String filePath) throws IOException, InvalidSequenceException {
+        ArrayList<Sequence> sequences = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        BufferedReader bf = new BufferedReader(new FileReader(filePath));
+        
+        String line = bf.readLine();
+        while (line != null) {
+            if (line.startsWith(";")) continue;
+            if (line.startsWith(">")) {
+                if (sb.toString().length() > 0) sequences.add(createSeqObject(sb.toString()));
+                sb = new StringBuilder();
+            } 
+            else sb.append(line.toUpperCase());
+            
+            line = bf.readLine();
+        }
+        sequences.add(createSeqObject(sb.toString()));
+
+        bf.close();
+
+        return sequences;
+    }
+
+    public String getSequence() { return sequence;}
+    public int getLength() { return length;}
+
+    public void setSequence(String sequence) {
+        this.sequence = sequence;
+    }
+
+    public abstract Sequence subSeq(int start, int end) throws InvalidSequenceException;
+
+    public char elementAt(int index) {
+        return sequence.charAt(index);
+    }
+
+    public String toString() {
+        return sequence;
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Sequence)) return false;
+        Sequence s = (Sequence) o;
+        return s.sequence.equals(this.sequence);
+    }
+}
