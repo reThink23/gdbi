@@ -11,6 +11,10 @@ public abstract class Sequence {
     protected String sequence;
     protected int length;
 
+    protected static final String DNAPATTERN = "^[ATCG\\\\-]+$";
+    protected static final String RNAPATTERN = "^[AUCG\\\\-]+$";
+    protected static final String PROTEINPATTERN = "^[ACDEFGHIKLMNPQRSTVWYZXBU\\\\-\\\\*]+$";
+
     protected static boolean testLetters(String pattern, String sequence) {
         Pattern pat = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
         Matcher m = pat.matcher(sequence);
@@ -19,9 +23,9 @@ public abstract class Sequence {
 
     protected static Sequence createSeqObject(String sequence) throws InvalidSequenceException {
         // Invarianten
-        if (testLetters("[ATCG\\\\-]+", sequence)) return new DNASequence(sequence);
-        else if (testLetters("[AUCG\\\\-]+", sequence)) return new RNASequence(sequence);
-        else if (testLetters("[ACDEFGHIKLMNPQRSTVWYZXBU\\\\-\\\\*]+", sequence)) return new ProteinSequence(sequence);
+        if (testLetters(DNAPATTERN, sequence)) return new DNASequence(sequence);
+        else if (testLetters(RNAPATTERN, sequence)) return new RNASequence(sequence);
+        else if (testLetters(PROTEINPATTERN, sequence)) return new ProteinSequence(sequence);
         else throw new InvalidSequenceException("Given Sequence is not an DNA, RNA or Protein sequence");
     }
 

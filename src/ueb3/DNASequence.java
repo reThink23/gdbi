@@ -2,7 +2,7 @@ package ueb3;
 
 public class DNASequence extends NucleotidSequence {
     public DNASequence(String sequence) throws InvalidSequenceException {
-        if (!testLetters("[ACGT-]+", sequence)) throw new InvalidSequenceException("Given Sequence is not an DNA sequence");
+        if (!testLetters(Sequence.RNAPATTERN, sequence)) throw new InvalidSequenceException("Given Sequence is not an DNA sequence");
         this.sequence = sequence;
         this.length = this.sequence.length();
     }

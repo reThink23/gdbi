@@ -2,7 +2,7 @@ package ueb3;
 
 public class ProteinSequence extends Sequence{
     public ProteinSequence(String sequence) throws InvalidSequenceException {
-        if (!testLetters("[ACDEFGHIKLMNPQRSTVWYZXBU-*]+", sequence)) throw new InvalidSequenceException("Given Sequence is not an protein sequence");
+        if (!testLetters(Sequence.PROTEINPATTERN, sequence)) throw new InvalidSequenceException("Given Sequence is not an protein sequence");
         this.sequence = sequence;
         this.length = this.sequence.length();
     }

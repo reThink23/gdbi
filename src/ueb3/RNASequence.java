@@ -2,7 +2,7 @@ package ueb3;
 
 public class RNASequence extends NucleotidSequence {
     public RNASequence(String sequence) throws InvalidSequenceException {
-        if (!testLetters("[ACGU-]+", sequence)) throw new InvalidSequenceException("Given Sequence is not an RNA sequence");
+        if (!testLetters(Sequence.RNAPATTERN, sequence)) throw new InvalidSequenceException("Given Sequence is not an RNA sequence");
         this.sequence = sequence;
         this.length = this.sequence.length();
     }

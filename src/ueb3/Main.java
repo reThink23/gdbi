@@ -12,12 +12,12 @@ public class Main {
 		ArrayList<Sequence> sequences = Sequence.readFastA(args[0]);
 		for (Sequence seq: sequences) {
 			if (seq instanceof ProteinSequence) {
-				System.out.println(seq.subSeq(0, 10));
+				System.out.println("Protein: " + seq.subSeq(0, 60));
 			} else {
 				if (seq instanceof DNASequence) {
-					System.out.println(((DNASequence) ((DNASequence) seq.subSeq(0, 10)).reverseComplement()).transcribeToRNA());
-				}
-				System.out.println(((NucleotidSequence) seq.subSeq(0, 10)).reverseComplement());
+					System.out.println("DNA to RNA: " + ((DNASequence) ((NucleotidSequence) seq.subSeq(0, 60)).reverseComplement()).transcribeToRNA());
+				} 
+				else System.out.println("RNA" + ((NucleotidSequence) seq.subSeq(0, 60)).reverseComplement());
 			}
 		}
 	}
