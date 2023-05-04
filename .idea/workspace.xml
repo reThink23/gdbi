@@ -13,7 +13,7 @@
       <change afterPath="$PROJECT_DIR$/gdbi.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/ueb3/DNASequence.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ueb3/NucleotidSequence.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ueb3/NucleotideSequence.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/ueb3/ProteinSequence.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/ueb3/RNASequence.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/ueb3/Sequence.java" afterDir="false" />

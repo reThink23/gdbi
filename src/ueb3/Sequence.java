@@ -9,29 +9,46 @@ import java.util.regex.Pattern;
 
 // UML-Klasse: Sequence, abstrakte Klasse
 public abstract class Sequence {
+    
     // Attribute aus UML-Diagramm nur in Sequence, da Vererbung
     protected String sequence;
     protected int length;
 
-    // neue konstante Attribute für die Pattern, um Redundanzen zu vermeiden
-    protected static final String DNAPATTERN = "^[ATCG\\\\-]+$";
-    protected static final String RNAPATTERN = "^[AUCG\\\\-]+$";
-    protected static final String PROTEINPATTERN = "^[ACDEFGHIKLMNPQRSTVWYZXBU\\\\-\\\\*]+$";
 
-    protected static boolean testLetters(String pattern, String sequence) {
-        Pattern pat = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+    // neue Methoden isDNA, isRNA, isProtein um zu checken ob string nur erlaubte Zeichen enthält 
+    // (in Konstruktor der Subklassen & createSeqObject) -> Redundanzvermeidung
+    public static boolean isDNA(String sequence) {
+        if (sequence == null || sequence.equals("")) return false;
+        Pattern pat = Pattern.compile("^[ATCG\\\\-]+$", Pattern.CASE_INSENSITIVE);
         Matcher m = pat.matcher(sequence);
         return m.find();
     }
 
-    protected static Sequence createSeqObject(String sequence) throws InvalidSequenceException {
-        // Klassenverträge - Invarianten
-        if (testLetters(DNAPATTERN, sequence)) return new DNASequence(sequence);
-        else if (testLetters(RNAPATTERN, sequence)) return new RNASequence(sequence);
-        else if (testLetters(PROTEINPATTERN, sequence)) return new ProteinSequence(sequence);
+    public static boolean isRNA(String sequence) {
+        if (sequence == null || sequence.equals("")) return false;
+        Pattern pat = Pattern.compile("^[AUCG\\\\-]+$", Pattern.CASE_INSENSITIVE);
+        Matcher m = pat.matcher(sequence);
+        return m.find();
+    }
+
+    public static boolean isProtein(String sequence) {
+        if (sequence == null || sequence.equals("")) return false;
+        Pattern pat = Pattern.compile("^[ACDEFGHIKLMNPQRSTVWYZXBU\\\\-\\\\*]+$", Pattern.CASE_INSENSITIVE);
+        Matcher m = pat.matcher(sequence);
+        return m.find();
+    }
+
+    // neue Methode um ein Sequence-Objekt zu erstellen (in readFastA) -> sauberer Code
+    private static Sequence createSeqObject(String sequence) throws InvalidSequenceException {
+        
+        // Klassenverträge - Invarianten (Erlaubte Zeichen)
+        if (isDNA(sequence)) return new DNASequence(sequence);
+        else if (isRNA(sequence)) return new RNASequence(sequence);
+        else if (isProtein(sequence)) return new ProteinSequence(sequence);
         else throw new InvalidSequenceException("Given Sequence is not an DNA, RNA or Protein sequence");
     }
 
+    // UML-Methode: readFASTA, Änderung: Rückgabe ArrayList<Sequence> anstatt Sequence[] (da einfachere Handhabung)
     public static ArrayList<Sequence> readFastA(String filePath) throws IOException, InvalidSequenceException {
         ArrayList<Sequence> sequences = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
@@ -39,11 +56,12 @@ public abstract class Sequence {
         
         String line = bf.readLine();
         while (line != null) {
-            if (line.startsWith(";")) continue;
+            if (line.startsWith(";")) {line = bf.readLine(); continue;}
             if (line.startsWith(">")) {
                 if (sb.toString().length() > 0) sequences.add(createSeqObject(sb.toString()));
                 sb = new StringBuilder();
             } 
+            // Klassenverträge - Invariante (Großbuchstaben) / abspeichern in Großbuchstaben für Einheitlichkeit
             else sb.append(line.toUpperCase());
             
             line = bf.readLine();
@@ -55,24 +73,27 @@ public abstract class Sequence {
         return sequences;
     }
 
+    // UML-Methode: getSequence, getLength
     public String getSequence() { return sequence;}
     public int getLength() { return length;}
 
-    public void setSequence(String sequence) {
-        this.sequence = sequence;
-    }
+    // UML-Methode: setSequence, abstrakte Methode
+    public abstract boolean setSequence(String sequence);
 
-    // abstrakte Methode
+    // UML-Methode: getSubSeq ("get" entfernt, um Getter klarer zu trennen), abstrakte Methode
     public abstract Sequence subSeq(int start, int end) throws InvalidSequenceException;
 
+    // UML-Methode: getElementAt ("get" entfernt, um Getter klarer zu trennen)
     public char elementAt(int index) {
         return sequence.charAt(index);
     }
 
+    // neue Methode, um weitere Implementierungen/Ausweitungen zu vereinfachen
     public String toString() {
         return sequence;
     }
-
+    
+    // neue Methode, um weitere Implementierungen/Ausweitungen zu vereinfachen
     public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Sequence)) return false;
