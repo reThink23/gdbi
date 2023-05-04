@@ -1,8 +1,11 @@
 package ueb3;
 
+// UML-Klasse: DNASequence
 public class DNASequence extends NucleotidSequence {
     public DNASequence(String sequence) throws InvalidSequenceException {
+        // Klassenverträge - Invariante
         if (!testLetters(Sequence.RNAPATTERN, sequence)) throw new InvalidSequenceException("Given Sequence is not an DNA sequence");
+        
         this.sequence = sequence;
         this.length = this.sequence.length();
     }

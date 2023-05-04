@@ -1,8 +1,11 @@
 package ueb3;
 
+// UML-Klasse: RNASequence
 public class RNASequence extends NucleotidSequence {
     public RNASequence(String sequence) throws InvalidSequenceException {
+        // Klassenverträge - Invariante
         if (!testLetters(Sequence.RNAPATTERN, sequence)) throw new InvalidSequenceException("Given Sequence is not an RNA sequence");
+        
         this.sequence = sequence;
         this.length = this.sequence.length();
     }

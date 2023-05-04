@@ -7,10 +7,13 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// UML-Klasse: Sequence, abstrakte Klasse
 public abstract class Sequence {
+    // Attribute aus UML-Diagramm nur in Sequence, da Vererbung
     protected String sequence;
     protected int length;
 
+    // neue konstante Attribute für die Pattern, um Redundanzen zu vermeiden
     protected static final String DNAPATTERN = "^[ATCG\\\\-]+$";
     protected static final String RNAPATTERN = "^[AUCG\\\\-]+$";
     protected static final String PROTEINPATTERN = "^[ACDEFGHIKLMNPQRSTVWYZXBU\\\\-\\\\*]+$";
@@ -22,7 +25,7 @@ public abstract class Sequence {
     }
 
     protected static Sequence createSeqObject(String sequence) throws InvalidSequenceException {
-        // Invarianten
+        // Klassenverträge - Invarianten
         if (testLetters(DNAPATTERN, sequence)) return new DNASequence(sequence);
         else if (testLetters(RNAPATTERN, sequence)) return new RNASequence(sequence);
         else if (testLetters(PROTEINPATTERN, sequence)) return new ProteinSequence(sequence);
@@ -59,6 +62,7 @@ public abstract class Sequence {
         this.sequence = sequence;
     }
 
+    // abstrakte Methode
     public abstract Sequence subSeq(int start, int end) throws InvalidSequenceException;
 
     public char elementAt(int index) {
