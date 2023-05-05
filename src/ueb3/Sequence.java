@@ -14,6 +14,28 @@ public abstract class Sequence {
     protected String sequence;
     protected int length;
 
+    public static enum type {DNA, RNA, PROTEIN}
+
+    public boolean is(type type) {
+        // Pattern pat;
+
+        switch (type) {
+            case DNA:
+                // pat = Pattern.compile("^[ATCG\\\\-]+$", Pattern.CASE_INSENSITIVE);
+                return isDNA(this.sequence);
+                case RNA:
+                // pat = Pattern.compile("^[AUCG\\\\-]+$", Pattern.CASE_INSENSITIVE);
+                return isRNA(this.sequence);
+                case PROTEIN:
+                // pat = Pattern.compile("^[ACDEFGHIKLMNPQRSTVWYZXBU\\\\-\\\\*]+$", Pattern.CASE_INSENSITIVE);
+                return isProtein(this.sequence);
+            default:
+                return false;
+        }
+        // Matcher m = pat.matcher(sequence);
+        // return m.find();
+    }
+
 
     // neue Methoden isDNA, isRNA, isProtein um zu checken ob string nur erlaubte Zeichen enthält 
     // (in Konstruktor der Subklassen & createSeqObject) -> Redundanzvermeidung
