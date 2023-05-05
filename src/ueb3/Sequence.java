@@ -16,19 +16,19 @@ public abstract class Sequence {
 
     public static enum type {DNA, RNA, PROTEIN}
 
-    public boolean is(type type) {
+    public static boolean is(type type, String sequence) {
         // Pattern pat;
 
         switch (type) {
             case DNA:
                 // pat = Pattern.compile("^[ATCG\\\\-]+$", Pattern.CASE_INSENSITIVE);
-                return isDNA(this.sequence);
+                return isDNA(sequence);
                 case RNA:
                 // pat = Pattern.compile("^[AUCG\\\\-]+$", Pattern.CASE_INSENSITIVE);
-                return isRNA(this.sequence);
+                return isRNA(sequence);
                 case PROTEIN:
                 // pat = Pattern.compile("^[ACDEFGHIKLMNPQRSTVWYZXBU\\\\-\\\\*]+$", Pattern.CASE_INSENSITIVE);
-                return isProtein(this.sequence);
+                return isProtein(sequence);
             default:
                 return false;
         }
