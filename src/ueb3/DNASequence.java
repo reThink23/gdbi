@@ -5,10 +5,22 @@ public class DNASequence extends NucleotideSequence {
     public DNASequence(String sequence) throws InvalidSequenceException {
         
         // Klassenverträge - Invariante
-        if (!Sequence.isDNA(sequence)) throw new InvalidSequenceException("Given Sequence is not an DNA sequence");
+        if (!Sequence.isDNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a DNA sequence");
         
         this.sequence = sequence;
         this.length = this.sequence.length();
+        this.phredScores = null;
+    }
+
+    public DNASequence(String sequence, int[] phredScores) throws InvalidSequenceException {
+        
+        // Klassenverträge - Invariante
+        if (phredScores.length != sequence.length()) throw new IllegalArgumentException("Given Sequence and PhredScores have different length");
+        if (!Sequence.isDNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a DNA sequence");
+        
+        this.sequence = sequence;
+        this.length = this.sequence.length();
+        this.phredScores = phredScores;
     }
 
     // UML-Methode: setSequence,
@@ -17,7 +29,7 @@ public class DNASequence extends NucleotideSequence {
     public boolean setSequence(String sequence) {
         if (sequence == null || sequence.equals("")) return false;
         try {
-            if (!Sequence.isDNA(sequence)) throw new InvalidSequenceException("Given Sequence is not an protein sequence");
+            if (!Sequence.isDNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a DNA sequence");
             this.sequence = sequence;
             this.length = this.sequence.length();
             return true;
@@ -40,6 +52,12 @@ public class DNASequence extends NucleotideSequence {
     // Implementierung abstrakter Methode, Vererbung - Polymorphie
     @Override
     public Sequence subSeq(int start, int end) throws InvalidSequenceException {
+        if (start < 0 || end > this.sequence.length() || start > end) throw new IndexOutOfBoundsException("Given start or end index is out of bounds");
+        if (this.phredScores != null) {
+            int[] phredScores = new int[end - start];
+            System.arraycopy(this.phredScores, start, phredScores, end, end-start);
+            return new DNASequence(this.sequence.substring(start, end), phredScores);
+        }
         return new DNASequence(this.sequence.substring(start, end));
     }
     
@@ -51,20 +69,11 @@ public class DNASequence extends NucleotideSequence {
         seq.reverse();
         for (int i = 0; i < seq.length(); i++) {
             switch (seq.charAt(i)) {
-                case 'A':
-                    seq.setCharAt(i, 'T');
-                    break;
-                case 'T':
-                    seq.setCharAt(i, 'A');
-                    break;
-                case 'C':
-                    seq.setCharAt(i, 'G');
-                    break;
-                case 'G':
-                    seq.setCharAt(i, 'C');
-                    break;
-                default:
-                    break;
+                case 'A' -> seq.setCharAt(i, 'T');
+                case 'T' -> seq.setCharAt(i, 'A');
+                case 'C' -> seq.setCharAt(i, 'G');
+                case 'G' -> seq.setCharAt(i, 'C');
+                default -> {}
             }
         }
         return new DNASequence(seq.toString());

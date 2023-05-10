@@ -13,6 +13,7 @@ public abstract class Sequence {
     // Attribute aus UML-Diagramm nur in Sequence, da Vererbung
     protected String sequence;
     protected int length;
+    protected int[] phredScores;
 
     public static enum type {DNA, RNA, PROTEIN}
 
@@ -23,10 +24,10 @@ public abstract class Sequence {
             case DNA:
                 // pat = Pattern.compile("^[ATCG\\\\-]+$", Pattern.CASE_INSENSITIVE);
                 return isDNA(sequence);
-                case RNA:
+            case RNA:
                 // pat = Pattern.compile("^[AUCG\\\\-]+$", Pattern.CASE_INSENSITIVE);
                 return isRNA(sequence);
-                case PROTEIN:
+            case PROTEIN:
                 // pat = Pattern.compile("^[ACDEFGHIKLMNPQRSTVWYZXBU\\\\-\\\\*]+$", Pattern.CASE_INSENSITIVE);
                 return isProtein(sequence);
             default:
@@ -61,7 +62,7 @@ public abstract class Sequence {
     }
 
     // neue Methode um ein Sequence-Objekt zu erstellen (in readFastA) -> sauberer Code
-    private static Sequence createSeqObject(String sequence) throws InvalidSequenceException {
+    public static Sequence createSeqObject(String sequence) throws InvalidSequenceException {
         
         // Klassenverträge - Invarianten (Erlaubte Zeichen)
         if (isDNA(sequence)) return new DNASequence(sequence);
@@ -98,6 +99,19 @@ public abstract class Sequence {
     // UML-Methode: getSequence, getLength
     public String getSequence() { return sequence;}
     public int getLength() { return length;}
+
+    public int[] getPhredScores() { return phredScores;}
+
+    public int getPhredScoreAt(int i) {
+        if (phredScores == null) throw new NullPointerException("Attribute phredScores is not set");
+        if (i < 0 || i >= phredScores.length) throw new IndexOutOfBoundsException("Given index is out of bounds");
+        return phredScores[i];
+    }
+
+    public void setPhredScores(int[] phredScores) { 
+        if (phredScores.length != this.sequence.length()) throw new IllegalArgumentException("Given Sequence and PhredScores have different length");
+        this.phredScores = phredScores; 
+    }
 
     // UML-Methode: setSequence, abstrakte Methode
     public abstract boolean setSequence(String sequence);

@@ -5,10 +5,22 @@ public class RNASequence extends NucleotideSequence {
     public RNASequence(String sequence) throws InvalidSequenceException {
         
         // Klassenverträge - Invariante
-        if (!Sequence.isRNA(sequence)) throw new InvalidSequenceException("Given Sequence is not an RNA sequence");
+        if (!Sequence.isRNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a RNA sequence");
         
         this.sequence = sequence;
         this.length = this.sequence.length();
+        this.phredScores = null;
+    }
+
+    public RNASequence(String sequence, int[] phredScores) throws InvalidSequenceException {
+        
+        // Klassenverträge - Invariante
+        if (phredScores.length != sequence.length()) throw new IllegalArgumentException("Given Sequence and PhredScores have different length");
+        if (!Sequence.isRNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a RNA sequence");
+        
+        this.sequence = sequence;
+        this.length = this.sequence.length();
+        this.phredScores = phredScores;
     }
 
     // UML-Methode: setSequence,
@@ -17,7 +29,7 @@ public class RNASequence extends NucleotideSequence {
     public boolean setSequence(String sequence) {
         if (sequence == null || sequence.equals("")) return false;
         try {
-            if (!Sequence.isRNA(sequence)) throw new InvalidSequenceException("Given Sequence is not an protein sequence");
+            if (!Sequence.isRNA(sequence)) throw new InvalidSequenceException("Given Sequence is not an RNA sequence");
             this.sequence = sequence;
             this.length = this.sequence.length();
             return true;
@@ -29,8 +41,14 @@ public class RNASequence extends NucleotideSequence {
     // UML-Methode: getSubSeq ("get" entfernt, um Getter klarer zu trennen),
     // Implementierung abstrakter Methode, Vererbung - Polymorphie
     @Override
-    public Sequence subSeq(int start, int end) {
-        return null;
+    public Sequence subSeq(int start, int end) throws InvalidSequenceException {
+        if (start < 0 || end > this.sequence.length() || start > end) throw new IndexOutOfBoundsException("Given start or end index is out of bounds");
+        if (this.phredScores != null) {
+            int[] phredScores = new int[end - start];
+            System.arraycopy(this.phredScores, start, phredScores, end, end-start);
+            return new RNASequence(this.sequence.substring(start, end), phredScores);
+        }
+        return new RNASequence(this.sequence.substring(start, end));
     }
 
     // UML-Methode: getReverseComplement ("get" entfernt, um Getter klarer zu trennen),
@@ -41,20 +59,12 @@ public class RNASequence extends NucleotideSequence {
         seq.reverse();
         for (int i = 0; i < seq.length(); i++) {
             switch (seq.charAt(i)) {
-                case 'A':
-                    seq.setCharAt(i, 'U');
-                    break;
-                case 'U':
-                    seq.setCharAt(i, 'A');
-                    break;
-                case 'C':
-                    seq.setCharAt(i, 'G');
-                    break;
-                case 'G':
-                    seq.setCharAt(i, 'C');
-                    break;
-                default:
-                    break;
+                case 'A' -> seq.setCharAt(i, 'U');
+                case 'U' -> seq.setCharAt(i, 'A');
+                case 'C' -> seq.setCharAt(i, 'G');
+                case 'G' -> seq.setCharAt(i, 'C');
+                default -> {
+                }
             }
         }
         return new RNASequence(seq.toString());

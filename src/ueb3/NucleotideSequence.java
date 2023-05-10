@@ -8,6 +8,16 @@ public abstract class NucleotideSequence extends Sequence {
     public abstract NucleotideSequence reverseComplement() throws InvalidSequenceException;
     public abstract Sequence subSeq(int start, int end) throws InvalidSequenceException;
 
+    protected void reversePhredScore() {
+        if (this.phredScores != null) {
+            int[] phredScores = new int[this.phredScores.length];
+            for (int i = 0; i < phredScores.length; i++) {
+                phredScores[i] = this.phredScores[phredScores.length - i - 1];
+            }
+            this.phredScores = phredScores;
+        }
+    }
+
     // neue Methode, um weitere Implementierungen/Ausweitungen zu vereinfachen
     // Vererbung - Polymorphie
     @Override

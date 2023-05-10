@@ -9,6 +9,18 @@ public class ProteinSequence extends Sequence {
         
         this.sequence = sequence;
         this.length = this.sequence.length();
+        this.phredScores = null;
+    }
+
+    public ProteinSequence(String sequence, int[] phredScores) throws InvalidSequenceException {
+        
+        // Klassenverträge - Invariante
+        if (phredScores.length != sequence.length()) throw new IllegalArgumentException("Given Sequence and PhredScores have different length");
+        if (!Sequence.isProtein(sequence)) throw new InvalidSequenceException("Given Sequence is not a protein sequence");
+        
+        this.sequence = sequence;
+        this.length = this.sequence.length();
+        this.phredScores = phredScores;
     }
 
     // UML-Methode: setSequence, 
@@ -17,7 +29,7 @@ public class ProteinSequence extends Sequence {
     public boolean setSequence(String sequence) {
         if (sequence == null || sequence.equals("")) return false;
         try {
-            if (!Sequence.isProtein(sequence)) throw new InvalidSequenceException("Given Sequence is not an protein sequence");
+            if (!Sequence.isProtein(sequence)) throw new InvalidSequenceException("Given Sequence is not a protein sequence");
             this.sequence = sequence;
             this.length = this.sequence.length();
             return true;
@@ -30,6 +42,12 @@ public class ProteinSequence extends Sequence {
     // Implementierung abstrakter Methode, Vererbung - Polymorphie
     @Override
     public ProteinSequence subSeq(int start, int end) throws InvalidSequenceException {
+        if (start < 0 || end > this.sequence.length() || start > end) throw new IndexOutOfBoundsException("Given start or end index is out of bounds");
+        if (this.phredScores != null) {
+            int[] phredScores = new int[end - start];
+            System.arraycopy(this.phredScores, start, phredScores, end, end-start);
+            return new ProteinSequence(this.sequence.substring(start, end), phredScores);
+        }
         return new ProteinSequence(this.sequence.substring(start, end));
     }
 
