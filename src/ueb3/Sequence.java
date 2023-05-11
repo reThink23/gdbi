@@ -15,59 +15,13 @@ public abstract class Sequence {
     protected int length;
     protected int[] phredScores;
 
-    public static enum type {DNA, RNA, PROTEIN}
-
-    public static boolean is(type type, String sequence) {
-        // Pattern pat;
-
-        switch (type) {
-            case DNA:
-                // pat = Pattern.compile("^[ATCG\\\\-]+$", Pattern.CASE_INSENSITIVE);
-                return isDNA(sequence);
-            case RNA:
-                // pat = Pattern.compile("^[AUCG\\\\-]+$", Pattern.CASE_INSENSITIVE);
-                return isRNA(sequence);
-            case PROTEIN:
-                // pat = Pattern.compile("^[ACDEFGHIKLMNPQRSTVWYZXBU\\\\-\\\\*]+$", Pattern.CASE_INSENSITIVE);
-                return isProtein(sequence);
-            default:
-                return false;
-        }
-        // Matcher m = pat.matcher(sequence);
-        // return m.find();
-    }
-
-
-    // neue Methoden isDNA, isRNA, isProtein um zu checken ob string nur erlaubte Zeichen enthält 
-    // (in Konstruktor der Subklassen & createSeqObject) -> Redundanzvermeidung
-    public static boolean isDNA(String sequence) {
-        if (sequence == null || sequence.equals("")) return false;
-        Pattern pat = Pattern.compile("^[ATCG\\\\-]+$", Pattern.CASE_INSENSITIVE);
-        Matcher m = pat.matcher(sequence);
-        return m.find();
-    }
-
-    public static boolean isRNA(String sequence) {
-        if (sequence == null || sequence.equals("")) return false;
-        Pattern pat = Pattern.compile("^[AUCG\\\\-]+$", Pattern.CASE_INSENSITIVE);
-        Matcher m = pat.matcher(sequence);
-        return m.find();
-    }
-
-    public static boolean isProtein(String sequence) {
-        if (sequence == null || sequence.equals("")) return false;
-        Pattern pat = Pattern.compile("^[ACDEFGHIKLMNPQRSTVWYZXBU\\\\-\\\\*]+$", Pattern.CASE_INSENSITIVE);
-        Matcher m = pat.matcher(sequence);
-        return m.find();
-    }
-
     // neue Methode um ein Sequence-Objekt zu erstellen (in readFastA) -> sauberer Code
     public static Sequence createSeqObject(String sequence) throws InvalidSequenceException {
         
         // Klassenverträge - Invarianten (Erlaubte Zeichen)
-        if (isDNA(sequence)) return new DNASequence(sequence);
-        else if (isRNA(sequence)) return new RNASequence(sequence);
-        else if (isProtein(sequence)) return new ProteinSequence(sequence);
+        if (SeqUtils.isDNA(sequence)) return new DNASequence(sequence);
+        else if (SeqUtils.isRNA(sequence)) return new RNASequence(sequence);
+        else if (SeqUtils.isProtein(sequence)) return new ProteinSequence(sequence);
         else throw new InvalidSequenceException("Given Sequence is not an DNA, RNA or Protein sequence");
     }
 
@@ -98,7 +52,7 @@ public abstract class Sequence {
 
     // UML-Methode: getSequence, getLength
     public String getSequence() { return sequence;}
-    public int getLength() { return length;}
+    public int length() { return length;}
 
     public int[] getPhredScores() { return phredScores;}
 

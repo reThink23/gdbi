@@ -8,6 +8,9 @@ public abstract class NucleotideSequence extends Sequence {
     public abstract NucleotideSequence reverseComplement() throws InvalidSequenceException;
     public abstract Sequence subSeq(int start, int end) throws InvalidSequenceException;
 
+
+    protected abstract char getComplement(char nucleotide);
+
     protected void reversePhredScore() {
         if (this.phredScores != null) {
             int[] phredScores = new int[this.phredScores.length];

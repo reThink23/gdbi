@@ -5,7 +5,7 @@ public class RNASequence extends NucleotideSequence {
     public RNASequence(String sequence) throws InvalidSequenceException {
         
         // Klassenverträge - Invariante
-        if (!Sequence.isRNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a RNA sequence");
+        if (!SeqUtils.isRNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a RNA sequence");
         
         this.sequence = sequence;
         this.length = this.sequence.length();
@@ -16,7 +16,7 @@ public class RNASequence extends NucleotideSequence {
         
         // Klassenverträge - Invariante
         if (phredScores.length != sequence.length()) throw new IllegalArgumentException("Given Sequence and PhredScores have different length");
-        if (!Sequence.isRNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a RNA sequence");
+        if (!SeqUtils.isRNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a RNA sequence");
         
         this.sequence = sequence;
         this.length = this.sequence.length();
@@ -29,7 +29,7 @@ public class RNASequence extends NucleotideSequence {
     public boolean setSequence(String sequence) {
         if (sequence == null || sequence.equals("")) return false;
         try {
-            if (!Sequence.isRNA(sequence)) throw new InvalidSequenceException("Given Sequence is not an RNA sequence");
+            if (!SeqUtils.isRNA(sequence)) throw new InvalidSequenceException("Given Sequence is not an RNA sequence");
             this.sequence = sequence;
             this.length = this.sequence.length();
             return true;
@@ -45,10 +45,21 @@ public class RNASequence extends NucleotideSequence {
         if (start < 0 || end > this.sequence.length() || start > end) throw new IndexOutOfBoundsException("Given start or end index is out of bounds");
         if (this.phredScores != null) {
             int[] phredScores = new int[end - start];
-            System.arraycopy(this.phredScores, start, phredScores, end, end-start);
+            System.arraycopy(this.phredScores, start, phredScores, 0, end-start);
             return new RNASequence(this.sequence.substring(start, end), phredScores);
         }
         return new RNASequence(this.sequence.substring(start, end));
+    }
+
+    @Override
+    protected char getComplement(char nucleotide) {
+        switch (nucleotide) {
+            case 'A' -> {return 'U';}
+            case 'U' -> {return 'A';}
+            case 'C' -> {return 'G';}
+            case 'G' -> {return 'C';}
+            default -> {throw new IllegalArgumentException("Given nucleotide is not a valid RNA nucleotide");}
+        }
     }
 
     // UML-Methode: getReverseComplement ("get" entfernt, um Getter klarer zu trennen),

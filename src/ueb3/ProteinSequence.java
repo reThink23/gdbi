@@ -5,7 +5,7 @@ public class ProteinSequence extends Sequence {
     public ProteinSequence(String sequence) throws InvalidSequenceException {
         
         // Klassenverträge - Invariante
-        if (!Sequence.isProtein(sequence)) throw new InvalidSequenceException("Given Sequence is not an protein sequence");
+        if (!SeqUtils.isProtein(sequence)) throw new InvalidSequenceException("Given Sequence is not an protein sequence");
         
         this.sequence = sequence;
         this.length = this.sequence.length();
@@ -16,7 +16,7 @@ public class ProteinSequence extends Sequence {
         
         // Klassenverträge - Invariante
         if (phredScores.length != sequence.length()) throw new IllegalArgumentException("Given Sequence and PhredScores have different length");
-        if (!Sequence.isProtein(sequence)) throw new InvalidSequenceException("Given Sequence is not a protein sequence");
+        if (!SeqUtils.isProtein(sequence)) throw new InvalidSequenceException("Given Sequence is not a protein sequence");
         
         this.sequence = sequence;
         this.length = this.sequence.length();
@@ -29,7 +29,7 @@ public class ProteinSequence extends Sequence {
     public boolean setSequence(String sequence) {
         if (sequence == null || sequence.equals("")) return false;
         try {
-            if (!Sequence.isProtein(sequence)) throw new InvalidSequenceException("Given Sequence is not a protein sequence");
+            if (!SeqUtils.isProtein(sequence)) throw new InvalidSequenceException("Given Sequence is not a protein sequence");
             this.sequence = sequence;
             this.length = this.sequence.length();
             return true;
@@ -45,7 +45,7 @@ public class ProteinSequence extends Sequence {
         if (start < 0 || end > this.sequence.length() || start > end) throw new IndexOutOfBoundsException("Given start or end index is out of bounds");
         if (this.phredScores != null) {
             int[] phredScores = new int[end - start];
-            System.arraycopy(this.phredScores, start, phredScores, end, end-start);
+            System.arraycopy(this.phredScores, start, phredScores, 0, end-start);
             return new ProteinSequence(this.sequence.substring(start, end), phredScores);
         }
         return new ProteinSequence(this.sequence.substring(start, end));

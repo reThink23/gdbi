@@ -64,24 +64,24 @@ public class FastQ {
 				// ignore
 			}
 		}
-		return sum / count;
+		return (count > 0) ? sum / count : -1;
 	}
 
 	public static void main(String[] args) throws IOException, InvalidSequenceException {
-		ArrayList<Sequence> sequences = readFastQ("/testfiles/beispiel_ueb4.fastq");
+		ArrayList<Sequence> sequences = readFastQ("C:/Users/joela/IdeaProjects/gdbi/testfiles/beispiel_ueb4.fastq");
 		ArrayList<Sequence> trimmedSequences = new ArrayList<>();
 		
-		int min = sequences.get(0).getLength();
+		int min = sequences.get(0).length();
 		for (int i = 1; i < sequences.size(); i++) {
-			if (sequences.get(i).getLength() < min) {
-				min = sequences.get(i).getLength();
+			if (sequences.get(i).length() < min) {
+				min = sequences.get(i).length();
 			}
 		}
 		for (int i = 0; i < min; i++) {
 			System.out.println(avgPhredScoreAt(sequences, i));
 		}
 		for (Sequence seq: sequences) {
-			System.out.println(qualityTrimming(seq, 32));
+			// System.out.println(qualityTrimming(seq, 32));
 			trimmedSequences.add(qualityTrimming(seq, 32));
 		}
 

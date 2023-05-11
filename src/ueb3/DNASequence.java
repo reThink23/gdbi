@@ -5,7 +5,7 @@ public class DNASequence extends NucleotideSequence {
     public DNASequence(String sequence) throws InvalidSequenceException {
         
         // Klassenverträge - Invariante
-        if (!Sequence.isDNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a DNA sequence");
+        if (!SeqUtils.isDNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a DNA sequence");
         
         this.sequence = sequence;
         this.length = this.sequence.length();
@@ -16,7 +16,7 @@ public class DNASequence extends NucleotideSequence {
         
         // Klassenverträge - Invariante
         if (phredScores.length != sequence.length()) throw new IllegalArgumentException("Given Sequence and PhredScores have different length");
-        if (!Sequence.isDNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a DNA sequence");
+        if (!SeqUtils.isDNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a DNA sequence");
         
         this.sequence = sequence;
         this.length = this.sequence.length();
@@ -29,7 +29,7 @@ public class DNASequence extends NucleotideSequence {
     public boolean setSequence(String sequence) {
         if (sequence == null || sequence.equals("")) return false;
         try {
-            if (!Sequence.isDNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a DNA sequence");
+            if (!SeqUtils.isDNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a DNA sequence");
             this.sequence = sequence;
             this.length = this.sequence.length();
             return true;
@@ -55,10 +55,21 @@ public class DNASequence extends NucleotideSequence {
         if (start < 0 || end > this.sequence.length() || start > end) throw new IndexOutOfBoundsException("Given start or end index is out of bounds");
         if (this.phredScores != null) {
             int[] phredScores = new int[end - start];
-            System.arraycopy(this.phredScores, start, phredScores, end, end-start);
+            System.arraycopy(this.phredScores, start, phredScores, 0, end-start);
             return new DNASequence(this.sequence.substring(start, end), phredScores);
         }
         return new DNASequence(this.sequence.substring(start, end));
+    }
+
+    @Override
+    protected char getComplement(char nucleotide) {
+        switch (nucleotide) {
+            case 'A' -> {return 'T';}
+            case 'T' -> {return 'A';}
+            case 'C' -> {return 'G';}
+            case 'G' -> {return 'C';}
+            default -> {throw new IllegalArgumentException("Given nucleotide is not a valid DNA nucleotide");}
+        }
     }
     
     // UML-Methode: getReverseComplement ("get" entfernt, um Getter klarer zu trennen),
