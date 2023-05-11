@@ -79,13 +79,7 @@ public class DNASequence extends NucleotideSequence {
         StringBuilder seq = new StringBuilder(sequence);
         seq.reverse();
         for (int i = 0; i < seq.length(); i++) {
-            switch (seq.charAt(i)) {
-                case 'A' -> seq.setCharAt(i, 'T');
-                case 'T' -> seq.setCharAt(i, 'A');
-                case 'C' -> seq.setCharAt(i, 'G');
-                case 'G' -> seq.setCharAt(i, 'C');
-                default -> {}
-            }
+            seq.setCharAt(i, getComplement(seq.charAt(i)));
         }
         return new DNASequence(seq.toString());
     }
@@ -98,5 +92,10 @@ public class DNASequence extends NucleotideSequence {
         if (!(o instanceof DNASequence)) return false;
         DNASequence s = (DNASequence) o;
         return s.sequence.equals(this.sequence);
+    }
+
+    @Override
+    public String toString() {
+        return "DNA:("+ length + ")" + sequence;
     }
 }

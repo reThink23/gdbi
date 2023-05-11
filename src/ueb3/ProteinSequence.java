@@ -60,4 +60,9 @@ public class ProteinSequence extends Sequence {
         ProteinSequence s = (ProteinSequence) o;
         return s.sequence.equals(this.sequence);
     }
+
+    @Override
+    public String toString() {
+        return "Protein:(" + length + ")" + sequence;
+    }
 }

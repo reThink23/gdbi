@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 // UML-Klasse: Sequence, abstrakte Klasse
 public abstract class Sequence {
@@ -50,11 +48,70 @@ public abstract class Sequence {
         return sequences;
     }
 
+    public static ArrayList<Sequence> readFastQ(String filePath) throws IOException, InvalidSequenceException {
+        ArrayList<Sequence> sequences = new ArrayList<>();
+        BufferedReader bf = new BufferedReader(new FileReader(filePath));
+
+        String line = bf.readLine();
+        String seqString = null;
+        int i = 0;
+        while (line != null) {
+            if (i % 4 == 1) {
+                seqString = line;
+            } else if (i % 4 == 3) {
+                Sequence seq = Sequence.createSeqObject(seqString);
+                seq.setPhredScores(calcPhredScore(line));
+                sequences.add(seq);
+            }
+            line = bf.readLine();
+            i++;
+        }
+        bf.close();
+
+        return sequences;
+    }
+
+    private static int[] calcPhredScore(String scoreString) {
+        int[] phredScores = new int[scoreString.length()];
+        for (int i = 0; i < scoreString.length(); i++) {
+            phredScores[i] = scoreString.charAt(i);
+        }
+        return phredScores;
+    }
+
+    public static Sequence qualityTrimming(Sequence seq, int m) throws InvalidSequenceException {
+        int[] phredScores = seq.getPhredScores();
+        int i = 0;
+        while (i < phredScores.length && phredScores[i] < m) {
+            i++;
+        }
+        int j = phredScores.length - 1;
+        while (j >= 0 && phredScores[j] < m) {
+            j--;
+        }
+        if (i >= j ) throw new InvalidSequenceException("Sequence is empty after quality trimming");
+        return seq.subSeq(i, j);
+    }
+
+    public static int avgPhredScoreAt(ArrayList<Sequence> sequences, int i) {
+        int sum = 0;
+        int count = 0;
+        for (Sequence seq : sequences) {
+            try {
+                sum += seq.getPhredScoreAt(i);
+                count++;
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+        return (count > 0) ? sum / count : -1;
+    }
+
     // UML-Methode: getSequence, getLength
     public String getSequence() { return sequence;}
     public int length() { return length;}
 
-    public int[] getPhredScores() { return phredScores;}
+    private int[] getPhredScores() { return phredScores;}
 
     public int getPhredScoreAt(int i) {
         if (phredScores == null) throw new NullPointerException("Attribute phredScores is not set");
@@ -78,10 +135,6 @@ public abstract class Sequence {
         return sequence.charAt(index);
     }
 
-    // neue Methode, um weitere Implementierungen/Ausweitungen zu vereinfachen
-    public String toString() {
-        return sequence;
-    }
     
     // neue Methode, um weitere Implementierungen/Ausweitungen zu vereinfachen
     public boolean equals(Object o) {
@@ -90,4 +143,7 @@ public abstract class Sequence {
         Sequence s = (Sequence) o;
         return s.sequence.equals(this.sequence);
     }
+
+    // neue Methode, um weitere Implementierungen/Ausweitungen zu vereinfachen
+    public abstract String toString();
 }

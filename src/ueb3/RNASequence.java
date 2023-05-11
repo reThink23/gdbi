@@ -69,18 +69,14 @@ public class RNASequence extends NucleotideSequence {
         StringBuilder seq = new StringBuilder(sequence);
         seq.reverse();
         for (int i = 0; i < seq.length(); i++) {
-            switch (seq.charAt(i)) {
-                case 'A' -> seq.setCharAt(i, 'U');
-                case 'U' -> seq.setCharAt(i, 'A');
-                case 'C' -> seq.setCharAt(i, 'G');
-                case 'G' -> seq.setCharAt(i, 'C');
-                default -> {
-                }
-            }
+                seq.setCharAt(i, getComplement(seq.charAt(i)));
         }
         return new RNASequence(seq.toString());
     }
 
+    
+    
+    
     // neue Methode, um weitere Implementierungen/Ausweitungen zu vereinfachen
     // Vererbung - Polymorphie
     @Override
@@ -89,5 +85,10 @@ public class RNASequence extends NucleotideSequence {
         if (!(o instanceof RNASequence)) return false;
         RNASequence s = (RNASequence) o;
         return s.sequence.equals(this.sequence);
+    }
+
+    @Override
+    public String toString() {
+        return "RNA:(" + length + ")" + sequence;
     }
 }
