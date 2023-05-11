@@ -25,7 +25,7 @@ public class FastQ {
 		}
 
 		for (Sequence seq: sequences) {
-			Sequence trimmedSeq = Sequence.qualityTrimming(seq, 70);
+			Sequence trimmedSeq = Sequence.trimByQuality(seq, 60);
 			trimmedSequences.add(trimmedSeq);
 		}
 		

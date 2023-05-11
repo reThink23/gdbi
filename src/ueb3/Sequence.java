@@ -33,11 +33,11 @@ public abstract class Sequence {
         while (line != null) {
             if (line.startsWith(";")) {line = bf.readLine(); continue;}
             if (line.startsWith(">")) {
-                if (sb.toString().length() > 0) sequences.add(createSeqObject(sb.toString()));
+                if (sb.length() > 0) sequences.add(createSeqObject(sb.toString()));
                 sb = new StringBuilder();
             } 
             // Klassenverträge - Invariante (Großbuchstaben) / abspeichern in Großbuchstaben für Einheitlichkeit
-            else sb.append(line.toUpperCase());
+            else sb.append(line);
             
             line = bf.readLine();
         }
@@ -60,7 +60,7 @@ public abstract class Sequence {
                 seqString = line;
             } else if (i % 4 == 3) {
                 Sequence seq = Sequence.createSeqObject(seqString);
-                seq.setPhredScores(calcPhredScore(line));
+                seq.setPhredScores(parsePhredScore(line));
                 sequences.add(seq);
             }
             line = bf.readLine();
@@ -71,7 +71,7 @@ public abstract class Sequence {
         return sequences;
     }
 
-    private static int[] calcPhredScore(String scoreString) {
+    private static int[] parsePhredScore(String scoreString) {
         int[] phredScores = new int[scoreString.length()];
         for (int i = 0; i < scoreString.length(); i++) {
             phredScores[i] = scoreString.charAt(i);
@@ -79,14 +79,14 @@ public abstract class Sequence {
         return phredScores;
     }
 
-    public static Sequence qualityTrimming(Sequence seq, int m) throws InvalidSequenceException {
+    public static Sequence trimByQuality(Sequence seq, int quality) throws InvalidSequenceException {
         int[] phredScores = seq.getPhredScores();
         int i = 0;
-        while (i < phredScores.length && phredScores[i] < m) {
+        while (i < phredScores.length && phredScores[i] < quality) {
             i++;
         }
         int j = phredScores.length - 1;
-        while (j >= 0 && phredScores[j] < m) {
+        while (j >= 0 && phredScores[j] < quality) {
             j--;
         }
         if (i >= j ) throw new InvalidSequenceException("Sequence is empty after quality trimming");
