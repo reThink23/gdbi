@@ -60,7 +60,7 @@ public abstract class Sequence {
                 seqString = line;
             } else if (i % 4 == 3) {
                 Sequence seq = Sequence.createSeqObject(seqString);
-                seq.setPhredScores(parsePhredScore(line));
+                seq.setPhredScores(parsePhredScore(line, 33));
                 sequences.add(seq);
             }
             line = bf.readLine();
@@ -71,22 +71,22 @@ public abstract class Sequence {
         return sequences;
     }
 
-    private static int[] parsePhredScore(String scoreString) {
+    private static int[] parsePhredScore(String scoreString, int offset) {
         int[] phredScores = new int[scoreString.length()];
         for (int i = 0; i < scoreString.length(); i++) {
-            phredScores[i] = scoreString.charAt(i);
+            phredScores[i] = scoreString.charAt(i) - offset;
         }
         return phredScores;
     }
 
-    public static Sequence trimByQuality(Sequence seq, int quality) throws InvalidSequenceException {
+    public static Sequence trimByQuality(Sequence seq, int minQuality) throws InvalidSequenceException {
         int[] phredScores = seq.getPhredScores();
         int i = 0;
-        while (i < phredScores.length && phredScores[i] < quality) {
+        while (i < phredScores.length && phredScores[i] < minQuality) {
             i++;
         }
         int j = phredScores.length - 1;
-        while (j >= 0 && phredScores[j] < quality) {
+        while (j > 0 && phredScores[j] < minQuality) {
             j--;
         }
         if (i >= j ) throw new InvalidSequenceException("Sequence is empty after quality trimming");
@@ -105,6 +105,27 @@ public abstract class Sequence {
             }
         }
         return (count > 0) ? sum / count : -1;
+    }
+
+    public static int getExactReads(Sequence genome, ArrayList<Sequence> reads) {
+        boolean found = true;
+        for (int k=0; k < reads.size(); k++) {
+            int genomeLength = genome.length();
+            int readLength = reads.get(k).length();
+            for (int i = 0; i <= genomeLength - readLength; i++) {
+                found = true;
+                for (int j = 0; j < reads.get(k).length(); j++) {
+                    if (reads.get(k).elementAt(j) != genome.elementAt(i+j)) {
+                        found = false;
+                        break;
+                    }
+                }
+                if (found) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
     // UML-Methode: getSequence, getLength
