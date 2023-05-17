@@ -107,25 +107,31 @@ public abstract class Sequence {
         return (count > 0) ? sum / count : -1;
     }
 
-    public static int getExactReads(Sequence genome, ArrayList<Sequence> reads) {
-        boolean found = true;
-        for (int k=0; k < reads.size(); k++) {
-            int genomeLength = genome.length();
-            int readLength = reads.get(k).length();
+    public boolean hasPhredScore() { return phredScores != null; }
+
+    private static int checkRead(Sequence genome, Sequence read) {
+        int genomeLength = genome.length();
+            int readLength = read.length();
             for (int i = 0; i <= genomeLength - readLength; i++) {
-                found = true;
-                for (int j = 0; j < reads.get(k).length(); j++) {
-                    if (reads.get(k).elementAt(j) != genome.elementAt(i+j)) {
+                boolean found = true;
+                for (int j = 0; j < read.length(); j++) {
+                    if (read.elementAt(j) != genome.elementAt(i+j)) {
                         found = false;
                         break;
                     }
                 }
-                if (found) {
-                    return i;
-                }
+                if (found) { return i; }
             }
+            return -1;
+    }
+
+    public static ArrayList<Integer> getExactReads(Sequence genome, ArrayList<Sequence> reads) {
+        ArrayList<Integer> positions = new ArrayList<>();
+        for (int k = 0; k < reads.size(); k++) {
+            int pos = checkRead(genome, reads.get(k));
+            if (pos != -1) positions.add(pos);
         }
-        return -1;
+        return positions;
     }
 
     // UML-Methode: getSequence, getLength
