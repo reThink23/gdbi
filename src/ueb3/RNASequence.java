@@ -1,10 +1,7 @@
 package ueb3;
 
-// UML-Klasse: RNASequence
 public class RNASequence extends NucleotideSequence {
     public RNASequence(String sequence) throws InvalidSequenceException {
-        
-        // Klassenverträge - Invariante
         if (!SeqUtils.isRNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a RNA sequence");
         
         this.sequence = sequence;
@@ -13,8 +10,6 @@ public class RNASequence extends NucleotideSequence {
     }
 
     public RNASequence(String sequence, int[] phredScores) throws InvalidSequenceException {
-        
-        // Klassenverträge - Invariante
         if (phredScores.length != sequence.length()) throw new IllegalArgumentException("Given Sequence and PhredScores have different length");
         if (!SeqUtils.isRNA(sequence)) throw new InvalidSequenceException("Given Sequence is not a RNA sequence");
         
@@ -23,23 +18,6 @@ public class RNASequence extends NucleotideSequence {
         this.phredScores = phredScores;
     }
 
-    // UML-Methode: setSequence,
-    // Implementierung abstrakter Methode, Vererbung - Polymorphie
-    @Override
-    public boolean setSequence(String sequence) {
-        if (sequence == null || sequence.equals("")) return false;
-        try {
-            if (!SeqUtils.isRNA(sequence)) throw new InvalidSequenceException("Given Sequence is not an RNA sequence");
-            this.sequence = sequence;
-            this.length = this.sequence.length();
-            return true;
-        } catch (InvalidSequenceException e) {
-            return false;
-        }
-    }
-
-    // UML-Methode: getSubSeq ("get" entfernt, um Getter klarer zu trennen),
-    // Implementierung abstrakter Methode, Vererbung - Polymorphie
     @Override
     public Sequence subSeq(int start, int end) throws InvalidSequenceException {
         if (start < 0 || end > this.sequence.length() || start > end) throw new IndexOutOfBoundsException("Given start or end index is out of bounds");
@@ -49,6 +27,16 @@ public class RNASequence extends NucleotideSequence {
             return new RNASequence(this.sequence.substring(start, end), phredScores);
         }
         return new RNASequence(this.sequence.substring(start, end));
+    }
+
+    @Override
+    public RNASequence reverseComplement() throws InvalidSequenceException {
+        StringBuilder seq = new StringBuilder(sequence);
+        seq.reverse();
+        for (int i = 0; i < seq.length(); i++) {
+            seq.setCharAt(i, getComplement(seq.charAt(i)));
+        }
+        return new RNASequence(seq.toString());
     }
 
     @Override
@@ -62,23 +50,17 @@ public class RNASequence extends NucleotideSequence {
         }
     }
 
-    // UML-Methode: getReverseComplement ("get" entfernt, um Getter klarer zu trennen),
-    // Vererbung - Polymorphie
     @Override
-    public RNASequence reverseComplement() throws InvalidSequenceException {
-        StringBuilder seq = new StringBuilder(sequence);
-        seq.reverse();
-        for (int i = 0; i < seq.length(); i++) {
-                seq.setCharAt(i, getComplement(seq.charAt(i)));
-        }
-        return new RNASequence(seq.toString());
+    public boolean setSequence(String sequence) {
+        if (sequence == null || sequence.equals("")) return false;
+        try {
+            if (!SeqUtils.isRNA(sequence)) throw new InvalidSequenceException("Given Sequence is not an RNA sequence");
+            this.sequence = sequence;
+            this.length = this.sequence.length();
+            return true;
+        } catch (InvalidSequenceException e) { return false; }
     }
 
-    
-    
-    
-    // neue Methode, um weitere Implementierungen/Ausweitungen zu vereinfachen
-    // Vererbung - Polymorphie
     @Override
     public boolean equals(Object o) {
         if (o == this) return true;
@@ -88,7 +70,5 @@ public class RNASequence extends NucleotideSequence {
     }
 
     @Override
-    public String toString() {
-        return "RNA:(" + length + ")" + sequence;
-    }
+    public String toString() { return "RNA:(" + length + ")" + sequence; }
 }

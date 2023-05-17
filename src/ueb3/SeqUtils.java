@@ -14,9 +14,6 @@ public abstract class SeqUtils {
 		}
 	}
 
-	// neue Methoden isDNA, isRNA, isProtein um zu checken ob string nur erlaubte
-	// Zeichen enthält
-	// (in Konstruktor der Subklassen & createSeqObject) -> Redundanzvermeidung
 	public static boolean isDNA(String sequence) {
 		return sequence != null && sequence.matches("(?i)^[ATCG\\\\-]+$");
 	}
