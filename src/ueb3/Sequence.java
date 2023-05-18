@@ -86,10 +86,10 @@ public abstract class Sequence {
         return seq.subSeq(i, j);
     }
 
-    public static ArrayList<Integer> getExactReads(Sequence genome, ArrayList<Sequence> reads) {
+    public ArrayList<Integer> getExactReads(ArrayList<Sequence> reads) {
         ArrayList<Integer> positions = new ArrayList<>();
         for (int k = 0; k < reads.size(); k++) {
-            int pos = checkRead(genome, reads.get(k));
+            int pos = checkRead(this, reads.get(k));
             if (pos != -1) positions.add(pos);
         }
         return positions;

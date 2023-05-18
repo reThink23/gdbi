@@ -14,7 +14,7 @@ public class Main {
 		}
 		Sequence genome = Sequence.readFastA(args[0]).get(0);
 		ArrayList<Sequence> reads = Sequence.readFastA(args[1]);
-		ArrayList<Integer> firstOccurences = Sequence.getExactReads(genome, reads);
+		ArrayList<Integer> firstOccurences = genome.getExactReads(reads);
 		System.out.println(firstOccurences);
 
 		

@@ -1,0 +1,8 @@
+Der Algorithmus wird in die Sequence-Klasse als Objektmethode implementiert, 
+da die Methode auch für Protein-Sequenzen funktionieren sollen. 
+Die Entscheidung für die Implemention als Objektmethode wurde dadurch getroffen, 
+dass es den Syntax verkürzt und einen objektorientierten Programmierstil aufweist. 
+Das heißt die Methode wird als Objektmethode des Genoms implementiert, 
+wobei eine ArrayListe mit Reads als Parameter übergeben wird. 
+Zuückgegeben wird eine ArrayList von Integer, 
+da 0 eine valide Position in einem String/Sequenz ist und sonst die Eindeutigkeit nicht gegeben ist.
