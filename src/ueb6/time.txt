@@ -1,0 +1,22 @@
+a) 
+reads 10 bp: 11420ms
+reads 100 bp: 53649ms
+asymptotische Laufzeit (Abhängigkeit von Reads & length?)
+
+b)
+10 reads: 746ms
+100 reads: 5609ms
+1000 reads: 53944ms
+
+c)
+Genome 10000 bp: 159ms
+Genome 100000 bp: 1439ms
+Genome 1000000 bp: 11071ms
+Genome 10000000 bp: 107294ms
+asymptotische Laufzeitbetrachtung
+
+d)
+Index bauen: 82799
+Suche: 111
+
+Den Index aufzubauen und die Suche ist schneller als der naive Algorithmus.
