@@ -26,13 +26,7 @@ public class Alignment {
 		return Math.min(Math.min(a,b),c);
 	}
 
-	private static int cost(char a, char b) {
-		if (a == b) {
-			return 0;
-		} else {
-			return 1;
-		}
-	}
+	private static int cost(char a, char b) { return a == b ? 0 : 1; }
 
 	public void buildMatrix() {
 		for (int i = 0; i < s1.length(); i++) {
