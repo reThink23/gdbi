@@ -1,0 +1,58 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "java",
+			"name": "Main",
+			"request": "launch",
+			"mainClass": "ueb12.Main",
+			"projectName": "gdbi_479cc2b8",
+			"args": "${workspaceFolder}/testfiles/ueb12/sequenzen.fa"
+		},
+		{
+			"type": "java",
+			"name": "Current File",
+			"request": "launch",
+			"mainClass": "${file}"
+		},
+		{
+			"type": "java",
+			"name": "Main",
+			"request": "launch",
+			"mainClass": "ueb3.Main",
+			"projectName": "gdbi_479cc2b8"
+		},
+		{
+			"type": "java",
+			"name": "FastQ",
+			"request": "launch",
+			"mainClass": "ueb4.FastQ",
+			"projectName": "gdbi_479cc2b8"
+		},
+		{
+			"type": "java",
+			"name": "Main(1)",
+			"request": "launch",
+			"mainClass": "ueb5.Main",
+			"projectName": "gdbi_479cc2b8"
+		},
+		{
+			"type": "java",
+			"name": "MappingFMIndex",
+			"request": "launch",
+			"mainClass": "ueb6.MappingFMIndex",
+			"projectName": "gdbi_479cc2b8"
+		},
+		{
+			"type": "java",
+			"name": "Alignment",
+			"request": "launch",
+			"mainClass": "ueb9.Alignment",
+			"projectName": "gdbi_479cc2b8",
+			"args": "${workspaceFolder}/testfiles/reads.fa"
+		}
+	]
+}
