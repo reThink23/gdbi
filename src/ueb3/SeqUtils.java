@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 public abstract class SeqUtils {
 	public static enum type { DNA, RNA, PROTEIN }
+	public static final String allowedDNAChars = "ATCG";
+	public static final String allowedRNAChars = "AUCG";
+	public static final String allowedProteinChars = "ACDEFGHIKLMNPQRSTVWYZXBU*";
 
 	public static boolean is(type type, String sequence) {
 		switch (type) {
