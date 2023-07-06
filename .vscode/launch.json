@@ -9,8 +9,8 @@
 			"name": "PWM",
 			"request": "launch",
 			"mainClass": "ueb12.PWM",
-			"projectName": "gdbi_cea0fc77",
-			"args": "${workspaceFolder}/testfiles/ueb12/MA0931.1.fa"
+			"projectName": "gdbi_479cc2b8",
+			"args": "${workspaceFolder}/testfiles/ueb12/sequenzen.fa"
 		},
 		{
 			"type": "java",

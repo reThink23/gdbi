@@ -109,7 +109,7 @@ public class PWM {
 
 	public static void main(String[] args) throws IOException, InvalidSequenceException {
 		if (args.length != 1) {
-			System.out.println("Usage: java Main <path to fasta file>");
+			System.out.println("Usage: java PWM <path to fasta file>");
 			System.exit(1);
 		}
 
