@@ -41,9 +41,11 @@ public class PWM {
 		}
 		return res.length() < length ? res + padChar : res;
 	}
+	
 	private static String padding(String s, int length, String padChar) {
 		return padding(s, length, padChar, 'c');
 	}
+	
 	private static String padding(String s, int length) {
 		return padding(s, length, " ", 'c');
 	}

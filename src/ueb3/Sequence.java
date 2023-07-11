@@ -141,6 +141,10 @@ public abstract class Sequence {
         this.phredScores = phredScores; 
     }
 
+    public boolean isDNA() { return this instanceof DNASequence; }
+    public boolean isRNA() { return this instanceof RNASequence; }
+    public boolean isProtein() { return this instanceof ProteinSequence; }
+
     public abstract boolean setSequence(String sequence);
     public abstract Sequence subSeq(int start, int end) throws InvalidSequenceException;
 
